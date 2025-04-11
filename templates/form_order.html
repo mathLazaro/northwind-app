@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="static/styles.css" />
+        <script>
+            function redirectTo(uri) {
+                window.location.href = uri;
+            }
+        </script>
+        <script src="static/render-selects.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Informações do pedido</h1>
+            <form action="">
+                <label for="customer">Cliente</label>
+                <select id="customer" name="customer">
+                    <option value=''></option>
+                </select>
+                <br /><br />
+
+                <label for="employee">Vendedor</label>
+                <select id="employee" name="employee">
+                    <option value=''></option>
+                </select>
+                <br /><br />
+
+                <label for="requireddate">Data Requerida</label>
+                <input type="datetime-local" id="requireddate" name="requireddate" />
+                <br /><br />
+
+                <label for="shippeddate">Data de Envio</label>
+                <input type="datetime-local" id="shippeddate" name="shippeddate" />
+                <br /><br />
+
+                <label for="freight">Frete</label>
+                <input type="number" step="0.01" id="freight" name="freight" />
+                <br /><br />
+
+                <label for="shipname">Nome do Destinatário</label>
+                <input type="text" id="shipname" name="shipname" />
+                <br /><br />
+
+                <label for="shipaddress">Endereço de Entrega</label>
+                <input type="text" id="shipaddress" name="shipaddress" />
+                <br /><br />
+
+                <label for="shipcity">Cidade de Entrega</label>
+                <input type="text" id="shipcity" name="shipcity" />
+                <br /><br />
+
+                <label for="shipregion">Região de Entrega</label>
+                <input type="text" id="shipregion" name="shipregion" />
+                <br /><br />
+
+                <label for="shippostalcode">CEP de Entrega</label>
+                <input type="text" id="shippostalcode" name="shippostalcode" />
+                <br /><br />
+
+                <label for="shipcountry">País de Entrega</label>
+                <input type="text" id="shipcountry" name="shipcountry" />
+                <br /><br />
+
+                <label for="shipper">Transportadora</label>
+                <select id="shipper" name="shipper">
+                    <option value=''></option>
+                </select>
+                <br /><br />
+                
+                <div class="div-button">
+                    <button type="button" onclick="redirectTo('home')">Voltar</button>
+                    <button type="submit">Criar Pedido</button>
+                </div>
+
+            </form>
+        </div>
+    </body>
+</html>
