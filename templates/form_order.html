@@ -14,67 +14,177 @@
     </head>
     <body>
         <div class="container">
-            <h1>Informações do pedido</h1>
+            <h1>Criar Pedido</h1>
+            <br />
+
             <form action="">
-                <label for="customer">Cliente</label>
-                <select id="customer" name="customer">
-                    <option value=''></option>
-                </select>
-                <br /><br />
+                <div class="dao-option">
+                    <span>
+                        <input
+                            type="radio"
+                            id="dao-driver"
+                            name="dao-option"
+                            value="dao-driver"
+                            checked
+                        />
+                        <label for="dao-driver">Dao com driver</label>
+                    </span>
 
-                <label for="employee">Vendedor</label>
-                <select id="employee" name="employee">
-                    <option value=''></option>
-                </select>
-                <br /><br />
+                    <span>
+                        <input
+                            type="radio"
+                            id="dao-driver-injection"
+                            name="dao-option"
+                            value="dao-driver-injection"
+                        />
+                        <label for="dao-driver-injection">Dao com driver (injecion)</label>
+                    </span>
 
-                <label for="requireddate">Data Requerida</label>
-                <input type="datetime-local" id="requireddate" name="requireddate" />
-                <br /><br />
+                    <span>
+                        <input type="radio" id="dao-orm" name="dao-option" value="dao-orm" />
+                        <label for="dao-orm">Dao com ORM</label>
+                    </span>
+                </div>
 
-                <label for="shippeddate">Data de Envio</label>
-                <input type="datetime-local" id="shippeddate" name="shippeddate" />
-                <br /><br />
+                <br />
 
-                <label for="freight">Frete</label>
-                <input type="number" step="0.01" id="freight" name="freight" />
-                <br /><br />
+                <h2>Informações do pedido</h2>
+                <div id="order-info" class="sub-container">
+                    <div>
+                        <label for="customer">Cliente</label>
+                        <select id="customer" name="customer">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="employee">Vendedor</label>
+                        <select id="employee" name="employee">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="requireddate">Data Requerida</label>
+                        <input type="datetime-local" id="requireddate" name="requireddate" />
+                    </div>
+                    <div>
+                        <label for="shippeddate">Data de Envio</label>
+                        <input type="datetime-local" id="shippeddate" name="shippeddate" />
+                    </div>
+                    <div>
+                        <label for="freight">Frete</label>
+                        <input type="number" step="0.01" id="freight" name="freight" />
+                    </div>
+                    <div>
+                        <label for="shipname">Nome do Destinatário</label>
+                        <input type="text" id="shipname" name="shipname" />
+                    </div>
+                    <div>
+                        <label for="shipaddress">Endereço de Entrega</label>
+                        <input type="text" id="shipaddress" name="shipaddress" />
+                    </div>
+                    <div>
+                        <label for="shipcity">Cidade de Entrega</label>
+                        <input type="text" id="shipcity" name="shipcity" />
+                    </div>
+                    <div>
+                        <label for="shipregion">Região de Entrega</label>
+                        <input type="text" id="shipregion" name="shipregion" />
+                    </div>
+                    <div>
+                        <label for="shippostalcode">CEP de Entrega</label>
+                        <input type="text" id="shippostalcode" name="shippostalcode" />
+                    </div>
 
-                <label for="shipname">Nome do Destinatário</label>
-                <input type="text" id="shipname" name="shipname" />
-                <br /><br />
+                    <div>
+                        <label for="shipcountry">País de Entrega</label>
+                        <input type="text" id="shipcountry" name="shipcountry" />
+                    </div>
+                    <div>
+                        <label for="shipper">Transportadora</label>
+                        <select id="shipper" name="shipper">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
 
-                <label for="shipaddress">Endereço de Entrega</label>
-                <input type="text" id="shipaddress" name="shipaddress" />
-                <br /><br />
+                <br />
 
-                <label for="shipcity">Cidade de Entrega</label>
-                <input type="text" id="shipcity" name="shipcity" />
-                <br /><br />
+                <h2>Itens do Pedido</h2>
+                <div id="order-items">
+                    <div>
+                        <label for="product">Produto</label>
+                        <select id="product" name="product">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div id="order-item-info">
+                        <div>
+                            <label for="quantity">Quantidade</label>
+                            <input
+                                type="number"
+                                id="quantity"
+                                name="quantity"
+                                min="1"
+                                step="1"
+                                value="0"
+                            />
+                        </div>
+                        <div>
+                            <label for="unitprice">Preço Unitário</label>
+                            <input
+                                type="number"
+                                id="unitprice"
+                                name="unitprice"
+                                step="0.01"
+                                value="0"
+                            />
+                        </div>
+                        <div>
+                            <label for="discount">Desconto (%)</label>
+                            <input
+                                type="number"
+                                id="discount"
+                                name="discount"
+                                step="0.01"
+                                value="0"
+                            />
+                        </div>
+                        <div>
+                            <button type="button" id="add-item-bttn" onclick="">+</button>
+                        </div>
+                    </div>
+                </div>
 
-                <label for="shipregion">Região de Entrega</label>
-                <input type="text" id="shipregion" name="shipregion" />
-                <br /><br />
+                <h2>Itens Adicionados</h2>
+                <table id="items-display">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Quantidade por Unidade</th>
+                            <th>Preço Unitário</th>
+                            <th>Quantidade</th>
+                            <th>Desconto (%)</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nome teste</td>
+                            <td>CATE</td>
+                            <td>56</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>5.6</td>
+                            <td><button type="button">assd</button></td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                <label for="shippostalcode">CEP de Entrega</label>
-                <input type="text" id="shippostalcode" name="shippostalcode" />
-                <br /><br />
-
-                <label for="shipcountry">País de Entrega</label>
-                <input type="text" id="shipcountry" name="shipcountry" />
-                <br /><br />
-
-                <label for="shipper">Transportadora</label>
-                <select id="shipper" name="shipper">
-                    <option value=''></option>
-                </select>
-                <br /><br />
-                
                 <div class="div-button">
                     <button type="button" onclick="redirectTo('home')">Voltar</button>
                     <button type="submit">Criar Pedido</button>
                 </div>
-
             </form>
         </div>
     </body>

@@ -15,3 +15,7 @@ def get_all_employees():
 @app.get('/shippers')
 def get_all_shippers():
     return select_all('shippers')
+
+@app.get('/products')
+def get_all_products():
+    return select_all('products')

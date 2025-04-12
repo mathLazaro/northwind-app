@@ -16,3 +16,4 @@ def home():
 @app.get("/add-order")
 def form_order():
     return render_template("form_order.html")
+
