@@ -38,4 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
         option.textContent = shippers.companyname;
         return option;
     });
+
+    renderSelectElement("products", "product", (product) => {
+        const option = document.createElement("option");
+        option.value = product.productid;
+        option.textContent = product.productname;
+        return option;
+    });
 });
