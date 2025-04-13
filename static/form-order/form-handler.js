@@ -13,9 +13,35 @@ document.addEventListener("DOMContentLoaded", () => {
         delete data.unitprice;
 
         data["items"] = getItems();
+        data["freight"] = Number(data.freight);
+
+        if (!data.shippeddate || !data.requireddate) {
+            alert("Data nula!");
+            return null;
+        }
+
+        if (getItems().length === 0) {
+            alert("Adicione um produto");
+            return null;
+        }
+
+        if (!data.customerid) {
+            alert("Adicione um cliente");
+            return null;
+        }
+
+        if (!data.employeeid) {
+            alert("Adicione um vendedor");
+            return null;
+        }
+
+        if (!data.shipperid) {
+            alert("Adicione uma transportadora");
+            return null;
+        }
 
         const daoOption = data["dao-option"];
-        const url = `http://localhost:5000/orders?dao=${daoOption}`;        
+        const url = `http://localhost:5000/orders?dao=${daoOption}`;
 
         try {
             fetch(url, {
