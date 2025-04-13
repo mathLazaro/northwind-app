@@ -1,4 +1,5 @@
 # NORTHWIND APP
+Esta aplicação Python implementa os padrões MVC e DAO para interagir com o banco de dados Northwind. Ela permite a inserção de novos pedidos e gera relatórios de pedidos e ranking de funcionários.
 
 ## Estrutura do projeto
 
