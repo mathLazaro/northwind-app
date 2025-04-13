@@ -3,21 +3,20 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>Northwind</title>
         <link rel="stylesheet" href="static/styles.css" />
-        <script>
-            function redirectTo(uri) {
-                window.location.href = uri;
-            }
-        </script>
-        <script src="static/render-selects.js"></script>
+        <script src="/static/global-script.js"></script>
+        <script src="/static/form-order/render-selects.js"></script>
+        <script type="module" src="/static/form-order/add-item-handler.js"></script>
+        <script src="/static/form-order/render-items-display.js"></script>
+        <script type="module" src="/static/form-order/form-handler.js"></script>
     </head>
     <body>
         <div class="container">
             <h1>Criar Pedido</h1>
             <br />
 
-            <form action="">
+            <form>
                 <div class="dao-option">
                     <span>
                         <input
@@ -52,13 +51,13 @@
                 <div id="order-info" class="sub-container">
                     <div>
                         <label for="customer">Cliente</label>
-                        <select id="customer" name="customer">
+                        <select id="customer" name="customerid">
                             <option value=""></option>
                         </select>
                     </div>
                     <div>
                         <label for="employee">Vendedor</label>
-                        <select id="employee" name="employee">
+                        <select id="employee" name="employeeid">
                             <option value=""></option>
                         </select>
                     </div>
@@ -101,7 +100,7 @@
                     </div>
                     <div>
                         <label for="shipper">Transportadora</label>
-                        <select id="shipper" name="shipper">
+                        <select id="shipper" name="shipperid">
                             <option value=""></option>
                         </select>
                     </div>
@@ -113,7 +112,7 @@
                 <div id="order-items">
                     <div>
                         <label for="product">Produto</label>
-                        <select id="product" name="product">
+                        <select id="product" name="productid">
                             <option value=""></option>
                         </select>
                     </div>
@@ -150,7 +149,7 @@
                             />
                         </div>
                         <div>
-                            <button type="button" id="add-item-bttn" onclick="">+</button>
+                            <button type="button" id="add-item-bttn">+</button>
                         </div>
                     </div>
                 </div>
@@ -168,16 +167,8 @@
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Nome teste</td>
-                            <td>CATE</td>
-                            <td>56</td>
-                            <td>4</td>
-                            <td>5</td>
-                            <td>5.6</td>
-                            <td><button type="button">assd</button></td>
-                        </tr>
+                    <tbody id="display-items">
+                        <tr></tr>
                     </tbody>
                 </table>
 
