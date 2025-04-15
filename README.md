@@ -1,16 +1,28 @@
 # NORTHWIND APP
+
 Esta aplicação Python implementa os padrões MVC e DAO para interagir com o banco de dados Northwind. Ela permite a inserção de novos pedidos e gera relatórios de pedidos e ranking de funcionários.
 
+## Injection
+
+Para testar SQL Injection, selecione a query maliciosa no arquivo `injection.sql` e cole no campo `País de Entrega` no formulário.
+
 ## Estrutura do projeto
+
+O projeto foi implementado na arquitetura MVC com a separação do módulo de acesso ao banco de dados no Dao:
 
 - templates (view)
 - static (view)
 - model
-- dao
-- controller
+- dao -> driver | orm
+- rest_controller (controller) -> controla os endpoints do backend
+- view_controller (controller) -> controla os endpoints do frontend
 
 
 ## Configuração do Ambiente
+
+### Configuração do banco de dados
+
+Para correta integração com a aplicação crie um banco de dados com o nome, usuário e senha `postgres` na porta padrão do postgres 5432. Posteriormente, restaure o backup `northwind.sql` no banco criado.
 
 ### Usando `venv` (Virtual Environment)
 

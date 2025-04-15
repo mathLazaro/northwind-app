@@ -17,6 +17,7 @@ class DaoDriverGeneric:
 
     def _get_col_len(self, table):
         query = "SELECT COUNT(*) AS total_colunas FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = %s AND table_name = %s;"
+        print(query)
         try:
             with self._get_connection() as conn:
                 with conn.cursor() as cursor:
@@ -28,6 +29,7 @@ class DaoDriverGeneric:
 
     def select_all(self, table):
         query = f'SELECT * FROM northwind.{table}'
+        print(query)
         try:
             with self._get_connection() as conn:
                 with conn.cursor() as cursor:
@@ -39,6 +41,7 @@ class DaoDriverGeneric:
 
     def generate_id(self, table, id_col) -> int:
         query = f"SELECT MAX({id_col}) FROM northwind.{table}"
+        print(query)
         try:
             with self._get_connection() as conn:
                 with conn.cursor() as cursor:

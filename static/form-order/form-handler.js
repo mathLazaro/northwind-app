@@ -50,12 +50,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
-            }).then(() => {
-                setTimeout(() => {
-                    location.reload();
-                }, 3000);
-                alert("Pedido adicionado");
-            });
+            })
+                .then((res) => {
+                    if (res.status === 400) {
+                        throw new Error("Erro");
+                    }
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
+                    alert("Pedido adicionado");
+                })
+                .catch((error) => {
+                    alert(error);
+                });
         } catch (error) {
             console.log(`Erro ao enviar formulario: `, error);
             return null;

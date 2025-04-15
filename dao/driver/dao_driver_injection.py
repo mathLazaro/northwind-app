@@ -29,6 +29,7 @@ class DaoDriverInjecion(DaoDriverGeneric):
         condition = ' AND '.join(
             [f"{col} = '{par}'" for col, par in parameters.items()])
         query = f'SELECT * FROM northwind.{self.table} ({cols}) WHERE {condition}'
+        print(query)
 
         try:
             with self._get_connection() as conn:
@@ -50,6 +51,7 @@ class DaoDriverInjecion(DaoDriverGeneric):
         value_strings = ', '.join([f"'{v}'" for v in values])
 
         query = f"INSERT INTO northwind.{table} ({col_names}) VALUES ({value_strings})"
+        print(query)
 
         try:
             with self._get_connection() as conn:

@@ -9,6 +9,7 @@ class DaoDriver(DaoDriverGeneric):
 
     def select_by_id(self, table, id_col, id):
         query = f'SELECT * FROM northwind.{table} WHERE {id_col} = %s'
+        print(query)
         try:
             with self._get_connection() as conn:
                 with conn.cursor() as cursor:
@@ -23,6 +24,7 @@ class DaoDriver(DaoDriverGeneric):
     def select_by(self, table,  parameters: dict):
         conditions = ' AND '.join([f'{col} = %s' for col in parameters])
         query = f'SELECT * FROM northwind.{table} WHERE {conditions}'
+        print(query)
 
         try:
             with self._get_connection() as conn:
