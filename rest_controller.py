@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import request, abort, jsonify
 
+from app import engine
 from app import app
 from dao import *
 
@@ -71,7 +72,9 @@ def get_product_by_id(product_id):
 
         # usa o dao orm
         elif dao_selector == 'dao-orm':
-            pass
+            with Session(engine) as session:
+                response = dao_orm.get_product_by_id(session, product_id)
+                data = response if response else data
 
         return data
     except Exception as e:
@@ -106,7 +109,9 @@ def get_category_by_id(category_id):
 
         # usa o dao orm
         elif dao_selector == 'dao-orm':
-            pass
+            with Session(engine) as session:
+                response = dao_orm.get_category_by_id(session, category_id)
+                data = response if response else data
 
         return data
     except Exception as e:
@@ -152,7 +157,9 @@ def get_order_details_by_id():
 
         # usa o dao orm
         elif dao_selector == 'dao-orm':
-            pass
+            with Session(engine) as session:
+                response = dao_orm.get_order_details_by_id(session, int(order_id), int(product_id))
+                data = response if response else data
 
         return data
     except Exception as e:
@@ -174,7 +181,23 @@ def add_new_order():
             _handle_input(body, driver_injection)
         # usa o dao orm
         elif dao_selector == 'dao-orm':
-            pass
+            with Session(engine) as session:
+                dao_orm.insert_order(
+                    session=session,
+                    customer_id=body.get('customerid'),
+                    employee_id=body.get('employeeid'),
+                    order_date=datetime.now(),
+                    required_date=body.get('requireddate'),
+                    shipper_id=body.get('shipperid'),
+                    freight=0 if body.get('freight') == "" else body.get('freight'),
+                    ship_name=body.get('shipname'),
+                    ship_address=body.get('shipaddress'),
+                    ship_city=body.get('shipcity'),
+                    ship_region=body.get('shipregion'),
+                    ship_postal_code=body.get('shippostalcode'),
+                    ship_country=body.get('shipcountry'),
+                    items=body.get('items')
+                )
 
         return "", 201
     except Exception as e:

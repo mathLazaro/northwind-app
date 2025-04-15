@@ -1,126 +1,34 @@
-from sqlalchemy import create_engine, Column, Integer, String, Date, Float, ForeignKey, func
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy.ext.declarative import declarative_base
+from typing import List, Optional
+from sqlalchemy.orm import Session
+from sqlalchemy import func
+from model import Orders, OrderDetails, Categories, Employees, Products
+import datetime
+import decimal
 
-engine = create_engine('postgresql://postgres:postgres@localhost/northwind') 
-Base = declarative_base()
-Session = sessionmaker(bind=engine)
-
-class Category(Base):
-    __tablename__ = 'categories'
-    categoryid = Column(Integer, primary_key=True)
-    categoryname = Column(String)
-    description = Column(String)
-    products = relationship("Product", backref="category")
-
-class Customer(Base):
-    __tablename__ = 'customers'
-    customerid = Column(String, primary_key=True)
-    companyname = Column(String)
-    contactname = Column(String)
-    contacttitle = Column(String)
-    address = Column(String)
-    city = Column(String)
-    region = Column(String)
-    postalcode = Column(String)
-    country = Column(String)
-    phone = Column(String)
-    fax = Column(String)
-    orders = relationship("Order", backref="customer")
-
-class Employee(Base):
-    __tablename__ = 'employees'
-    employeeid = Column(Integer, primary_key=True)
-    lastname = Column(String)
-    firstname = Column(String)
-    title = Column(String)
-    titleofcourtesy = Column(String)
-    birthdate = Column(Date)
-    hiredate = Column(Date)
-    address = Column(String)
-    city = Column(String)
-    region = Column(String)
-    postalcode = Column(String)
-    country = Column(String)
-    homephone = Column(String)
-    extension = Column(String)
-    reportsto = Column(Integer, ForeignKey('employees.employeeid'))
-    notes = Column(String)
-    orders = relationship("Order", backref="employee")
-
-class Order(Base):
-    __tablename__ = 'orders'
-    orderid = Column(Integer, primary_key=True, autoincrement=True)
-    customerid = Column(String, ForeignKey('customers.customerid'))
-    employeeid = Column(Integer, ForeignKey('employees.employeeid'))
-    orderdate = Column(Date)
-    requireddate = Column(Date)
-    shippeddate = Column(Date)
-    freight = Float
-    shipname = Column(String)
-    shipaddress = Column(String)
-    shipcity = Column(String)
-    shipregion = Column(String)
-    shippostalcode = Column(String)
-    shipcountry = Column(String)
-    shipperid = Column(Integer, ForeignKey('shippers.shipperid'))
-    order_details = relationship("OrderDetail", backref="order")
-
-class OrderDetail(Base):
-    __tablename__ = 'order_details'
-    orderid = Column(Integer, ForeignKey('orders.orderid'), primary_key=True)
-    productid = Column(Integer, ForeignKey('products.productid'), primary_key=True)
-    unitprice = Column(Float)
-    quantity = Column(Integer)
-    discount = Float
-    product = relationship("Product", backref="order_details")
-
-class Product(Base):
-    __tablename__ = 'products'
-    productid = Column(Integer, primary_key=True)
-    productname = Column(String)
-    supplierid = Column(Integer, ForeignKey('suppliers.supplierid'))
-    categoryid = Column(Integer, ForeignKey('categories.categoryid'))
-    quantityperunit = Column(String)
-    unitprice = Float
-    unitsinstock = Column(Integer)
-    unitsonorder = Column(Integer)
-    reorderlevel = Column(Integer)
-    discontinued = Column(Integer)
-
-class Shipper(Base):
-    __tablename__ = 'shippers'
-    shipperid = Column(Integer, primary_key=True)
-    companyname = Column(String)
-    phone = Column(String)
-    orders = relationship("Order", backref="shipper")
-
-class Supplier(Base):
-    __tablename__ = 'suppliers'
-    supplierid = Column(Integer, primary_key=True)
-    companyname = Column(String)
-    contactname = Column(String)
-    contacttitle = Column(String)
-    address = Column(String)
-    city = Column(String)
-    region = Column(String)
-    postalcode = Column(String)
-    country = Column(String)
-    phone = Column(String)
-    fax = Column(String)
-    homepage = Column(String)
-    products = relationship("Product", backref="supplier")
-
-def insert_order(customer_id, employee_id, order_date, required_date, ship_via, freight, ship_name, ship_address,
-                 ship_city, ship_region, ship_postal_code, ship_country, order_details):
-    session = Session()
+#inserir novo pedido
+def insert_order(
+    session: Session,
+    customer_id: str,
+    employee_id: int,
+    order_date: datetime.datetime,
+    required_date: datetime.datetime,
+    shipper_id: int,
+    freight: decimal.Decimal,
+    ship_name: str,
+    ship_address: str,
+    ship_city: str,
+    ship_region: str,
+    ship_postal_code: str,
+    ship_country: str,
+    items: List[dict]
+) -> int:
     try:
-        new_order = Order(
+        new_order = Orders(
             customerid=customer_id,
             employeeid=employee_id,
             orderdate=order_date,
             requireddate=required_date,
-            ship_via=ship_via,
+            shipperid=shipper_id,
             freight=freight,
             shipname=ship_name,
             shipaddress=ship_address,
@@ -130,61 +38,103 @@ def insert_order(customer_id, employee_id, order_date, required_date, ship_via, 
             shipcountry=ship_country
         )
         session.add(new_order)
-        session.commit()
+        session.flush()  
 
-        for detail in order_details:
-            new_order_detail = OrderDetail(
+        for item in items:
+            detail = OrderDetails(
                 orderid=new_order.orderid,
-                productid=detail['productid'],
-                unitprice=detail['unitprice'],
-                quantity=detail['quantity'],
-                discount=detail['discount']
+                productid=item['productid'],
+                unitprice=item['unitprice'],
+                quantity=item['quantity'],
+                discount=item['discount']
             )
-            session.add(new_order_detail)
+            session.add(detail)
 
         session.commit()
         return new_order.orderid
+
     except Exception as e:
         session.rollback()
         raise e
-    finally:
-        session.close()
-
-def get_order_details(order_id):
-    session = Session()
-    try:
-        order = session.query(Order).filter_by(orderid=order_id).first()
-        if order:
-            return {
-                'order_id': order.orderid,
-                'order_date': order.orderdate,
-                'customer_name': order.customer.companyname,
-                'employee_name': order.employee.firstname + " " + order.employee.lastname,
-                'order_details': [{
-                    'product_name': od.product.productname,
-                    'quantity': od.quantity,
-                    'unit_price': od.unitprice
-                } for od in order.order_details]
-            }
+    
+#busca sobre pedidos
+def get_product_by_id(session: Session, product_id: int) -> Optional[dict]:
+    product = session.query(Products).filter_by(productid=product_id).first()
+    if not product:
         return None
-    except Exception as e:
-        raise e
-    finally:
-        session.close()
+    return {
+        'productid': product.productid,
+        'productname': product.productname,
+        'unitprice': float(product.unitprice),
+        'unitsinstock': product.unitsinstock
+    }
 
-def get_employee_ranking(start_date, end_date):
-    session = Session()
-    try:
-        ranking = session.query(
-            Employee.firstname + " " + Employee.lastname,
-            func.count(Order.orderid),
-            func.sum(OrderDetail.quantity * OrderDetail.unitprice)
-        ).join(Order).join(OrderDetail).filter(
-            Order.orderdate.between(start_date, end_date)
-        ).group_by(Employee.employeeid).order_by(func.sum(OrderDetail.quantity * OrderDetail.unitprice).desc()).all()
+#busca detalhes de um único produto dentro de um pedido específico
+def get_order_details_by_id(session: Session, order_id: int, product_id: int) -> Optional[dict]:
+    detail = session.query(OrderDetails).filter_by(orderid=order_id, productid=product_id).first()
+    if not detail:
+        return None
+    return {
+        'orderid': detail.orderid,
+        'productid': detail.productid,
+        'quantity': detail.quantity,
+        'unitprice': float(detail.unitprice),
+        'discount': float(detail.discount)
+    }
+    
+#busca informações de uma categoria de produtos pelo id
+def get_category_by_id(session: Session, category_id: int) -> Optional[dict]:
+    category = session.query(Categories).filter_by(categoryid=category_id).first()
+    if not category:
+        return None
+    return {
+        'categoryid': category.categoryid,
+        'categoryname': category.categoryname,
+        'description': category.description
+    }
 
-        return [{'employee_name': row[0], 'total_orders': row[1], 'total_sales': row[2]} for row in ranking]
-    except Exception as e:
-        raise e
-    finally:
-        session.close()
+#relatório de todos os itens de um pedido
+def get_order_details(session: Session, order_id: int) -> Optional[dict]:
+    order = session.query(Orders).filter_by(orderid=order_id).first()
+
+    if not order:
+        return None
+
+    return {
+        'order_id': order.orderid,
+        'order_date': order.orderdate,
+        'customer_name': order.customers.companyname if order.customers else None,
+        'employee_name': f"{order.employees.firstname} {order.employees.lastname}" if order.employees else None,
+        'items': [
+            {
+                'product_id': detail.productid,
+                'quantity': detail.quantity,
+                'unit_price': float(detail.unitprice),
+                'discount': float(detail.discount)
+            }
+            for detail in session.query(OrderDetails).filter_by(orderid=order_id).all()
+        ]
+    }
+    
+#relatório de ranking de funcionários
+def get_employee_ranking(session: Session, start_date: datetime.datetime, end_date: datetime.datetime) -> List[dict]:
+    result = session.query(
+        Employees.firstname,
+        Employees.lastname,
+        func.count(Orders.orderid).label('total_orders'),
+        func.sum(OrderDetails.quantity * OrderDetails.unitprice).label('total_sales')
+    ).join(Orders, Employees.employeeid == Orders.employeeid)\
+     .join(OrderDetails, Orders.orderid == OrderDetails.orderid)\
+     .filter(Orders.orderdate.between(start_date, end_date))\
+     .group_by(Employees.employeeid)\
+     .order_by(func.sum(OrderDetails.quantity * OrderDetails.unitprice).desc())\
+     .all()
+
+    return [
+        {
+            'employee_name': f"{row.firstname} {row.lastname}",
+            'total_orders': row.total_orders,
+            'total_sales': float(row.total_sales or 0)
+        }
+        for row in result
+    ]
