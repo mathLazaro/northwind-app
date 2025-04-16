@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_cors import CORS
+from sqlalchemy import create_engine
 
+engine = create_engine('postgresql://postgres:postgres@localhost/postgres') 
 app = Flask(__name__)
 CORS(app)
 

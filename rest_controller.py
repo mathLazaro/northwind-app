@@ -1,8 +1,7 @@
 from datetime import datetime
 from flask import request, abort, jsonify
 
-from app import engine
-from app import app
+from app import app, engine
 from dao import *
 
 driver = DaoDriver()
@@ -74,7 +73,7 @@ def get_product_by_id(product_id):
         elif dao_selector == 'dao-orm':
             with Session(engine) as session:
                 response = dao_orm.get_product_by_id(session, product_id)
-                data = response if response else data
+                data = jsonify(response.to_dict()) if response else data
 
         return data
     except Exception as e:
@@ -109,9 +108,9 @@ def get_category_by_id(category_id):
 
         # usa o dao orm
         elif dao_selector == 'dao-orm':
-            with Session(engine) as session:
+            with Session(bind=engine) as session:
                 response = dao_orm.get_category_by_id(session, category_id)
-                data = response if response else data
+                data = jsonify(response.to_dict()) if response else data
 
         return data
     except Exception as e:
@@ -157,9 +156,10 @@ def get_order_details_by_id():
 
         # usa o dao orm
         elif dao_selector == 'dao-orm':
-            with Session(engine) as session:
-                response = dao_orm.get_order_details_by_id(session, int(order_id), int(product_id))
-                data = response if response else data
+            with Session(bind=engine) as session:
+                response = dao_orm.get_order_details_by_id(
+                    session, int(order_id), int(product_id))
+                data = jsonify(response.to_dict()) if response else data
 
         return data
     except Exception as e:
@@ -186,7 +186,7 @@ def add_new_order():
                     session=session,
                     customer_id=body.get('customerid'),
                     employee_id=body.get('employeeid'),
-                    order_date=datetime.now(),
+                    order_date=datetime.datetime.now(),
                     required_date=body.get('requireddate'),
                     shipper_id=body.get('shipperid'),
                     freight=0 if body.get('freight') == "" else body.get('freight'),
@@ -213,10 +213,10 @@ def _handle_input(body: dict, dao: DaoDriverGeneric):
                   'shipaddress', 'shipcity', 'shipregion', 'shippostalcode', 'shipcountry', 'shipperid']
         order_input = {key: body.get(key) for key in fields}
 
-        order_input['orderdate'] = datetime.now()
+        order_input['orderdate'] = datetime.datetime.now()
         order_input['orderid'] = order_id
         order_input['freight'] = 0 if order_input['freight'] == "" else order_input['freight']
-        
+
         dao.insert('orders', order_input)
 
         # adiciona os itens
