@@ -13,6 +13,7 @@ def insert_order(
     employee_id: int,
     order_date: datetime.datetime,
     required_date: datetime.datetime,
+    shipped_date: datetime.datetime,
     shipper_id: int,
     freight: decimal.Decimal,
     ship_name: str,
@@ -27,6 +28,7 @@ def insert_order(
         new_order = Orders(
             orderdate=order_date,
             requireddate=required_date,
+            shippeddate=shipped_date,
             shipperid=shipper_id,
             freight=freight,
             shipname=ship_name,

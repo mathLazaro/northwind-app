@@ -172,7 +172,7 @@ def add_new_order():
     try:
         body: dict = request.get_json()
         dao_selector = request.args.get('dao')
-
+        
         # usa o dao driver
         if dao_selector == 'dao-driver' or dao_selector is None:
             _handle_input(body, driver)
@@ -188,6 +188,7 @@ def add_new_order():
                     employee_id=body.get('employeeid'),
                     order_date=datetime.datetime.now(),
                     required_date=body.get('requireddate'),
+                    shipped_date=body.get('shippeddate'),
                     shipper_id=body.get('shipperid'),
                     freight=0 if body.get('freight') == "" else body.get('freight'),
                     ship_name=body.get('shipname'),
