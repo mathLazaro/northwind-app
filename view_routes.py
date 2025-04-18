@@ -17,3 +17,7 @@ def home():
 def form_order():
     return render_template("form_order.html")
 
+
+@app.get("/create-report")
+def form_report():
+    return render_template("form_report.html")

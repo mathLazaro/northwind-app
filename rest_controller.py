@@ -229,3 +229,52 @@ def _handle_input(body: dict, dao: DaoDriverGeneric):
     except Exception as e:
         print(f"Erro: {e}")
         abort(400)
+
+
+@app.get("/relatorios/pedido/<int:order_id>")
+def get_relatorio_detalhes_pedido(order_id):
+    try:
+        with Session(engine) as session:
+            resultado = dao_orm.relatorio_detalhes_pedido(session, order_id)
+            return jsonify([
+                {
+                    "order_id": r.order_id,
+                    "order_date": r.order_date,
+                    "cliente": r.cliente,
+                    "vendedor": r.vendedor,
+                    "produto": r.product_name,
+                    "quantidade": r.quantity,
+                    "preco_unitario": float(r.unit_price)
+                }
+                for r in resultado
+            ])
+    except Exception as e:
+        print(f"Erro: {e}")
+        abort(400)
+
+
+@app.get("/relatorios/ranking")
+def get_relatorio_ranking():
+    try:
+        data_inicio = request.args.get("inicio")
+        data_fim = request.args.get("fim")
+
+        if not data_inicio or not data_fim:
+            abort(400, "Parâmetros 'inicio' e 'fim' são obrigatórios.")
+
+        data_inicio = datetime.strptime(data_inicio, "%Y-%m-%d").date()
+        data_fim = datetime.strptime(data_fim, "%Y-%m-%d").date()
+
+        with Session(engine) as session:
+            resultado = dao_orm.relatorio_ranking_funcionarios(session, data_inicio, data_fim)
+            return jsonify([
+                {
+                    "funcionario": r.funcionario,
+                    "total_pedidos": r.total_pedidos,
+                    "total_vendido": float(r.total_vendido)
+                }
+                for r in resultado
+            ])
+    except Exception as e:
+        print(f"Erro: {e}")
+        abort(400)

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Relatórios - Northwind</title>
+        <link rel="stylesheet" href="/static/styles.css" />
+        <script src="/static/global-script.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Relatórios</h1>
+            <br />
+
+            <h2>Relatório de Detalhes de Pedido</h2>
+            <form action="/relatorios/pedido" method="get">
+                <div>
+                    <label for="orderid">Número do Pedido</label>
+                    <input type="number" id="orderid" name="orderid" required />
+                </div>
+                <br />
+                <div class="div-button">
+                    <button type="submit">Gerar Relatório</button>
+                </div>
+            </form>
+
+            <hr />
+
+            <h2>Relatório de Ranking de Funcionários</h2>
+            <form action="/relatorios/ranking" method="get">
+                <div>
+                    <label for="data_inicio">Data Início</label>
+                    <input type="date" id="data_inicio" name="inicio" required />
+                </div>
+                <div>
+                    <label for="data_fim">Data Fim</label>
+                    <input type="date" id="data_fim" name="fim" required />
+                </div>
+                <br />
+                <div class="div-button">
+                    <button type="submit">Gerar Relatório</button>
+                </div>
+            </form>
+
+            <br />
+            <div class="div-button">
+                <button onclick="redirectTo('home')">Voltar</button>
+            </div>
+        </div>
+    </body>
+</html>
