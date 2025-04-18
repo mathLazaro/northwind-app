@@ -20,7 +20,7 @@
                 </div>
                 <br />
                 <div class="div-button">
-                    <button type="submit">Gerar Relatório</button>
+                    <button id="btn-pedido" type="submit">Gerar Relatório</button>
                 </div>
             </form>
 
@@ -38,7 +38,7 @@
                 </div>
                 <br />
                 <div class="div-button">
-                    <button type="submit">Gerar Relatório</button>
+                    <button id="btn-rank" type="submit">Gerar Relatório</button>
                 </div>
             </form>
 
@@ -47,5 +47,26 @@
                 <button onclick="redirectTo('home')">Voltar</button>
             </div>
         </div>
+
+        <script>
+            const buttonOrder = document.getElementById('btn-pedido')
+            buttonOrder.addEventListener('submit', function (event){
+                event.preventDefault()
+                const orderId = document.getElementById('orderid').value
+                if (orderId) {
+                    window.location.href = `/relatorios/pedido/${orderId}`
+                }
+            })
+
+            const buttonRanking = document.getElementById('btn-rank')
+            buttonRanking.addEventListener('submit', function (event){
+                event.preventDefault()
+                const dataInicio = document.getElementById('data_inicio').value
+                const dataFim = document.getElementById('data_fim').value
+                if (dataInicio, dataFim) {
+                    window.location.href = `/relatorios/ranking/${dataInicio}${dataFim}`
+                }
+            })
+        </script>
     </body>
 </html>
